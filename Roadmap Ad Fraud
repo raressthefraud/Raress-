@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roadmap 6 luni — obiectiv, livrabile, metrică</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: #f7f7f6;
+    font-family: ui-sans-serif, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: #37352f; font-size: 14px; line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    padding: 28px 16px 60px;
+  }
+  #rm {
+    width: 700px; max-width: 100%; margin: 0 auto;
+    background: #ffffff; border: 1px solid #e9e9e7; border-radius: 12px;
+    overflow: hidden;
+  }
+  #rm .page { padding: 26px 28px 20px; }
+  #rm .doc-ico {
+    width: 44px; height: 44px; border-radius: 8px; background: #f1f1ef;
+    display: flex; align-items: center; justify-content: center; margin-bottom: 12px;
+  }
+  #rm h1.doc { font-size: 26px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.02em; }
+  #rm .doc-sub { color: #787774; font-size: 13.5px; margin: 0 0 18px; }
+
+  #rm .callout {
+    display: flex; gap: 10px; background: #f7f6f3; border-radius: 6px;
+    padding: 12px 14px; margin: 12px 0; font-size: 13.5px; color: #37352f;
+  }
+  #rm .callout.warn { background: #fdecc8; color: #5c4a13; }
+  #rm .callout.danger { background: #ffe2dd; color: #5f2b26; }
+  #rm .callout.ok { background: #dbeddb; color: #234a23; }
+  #rm .callout .ci { flex: 0 0 auto; margin-top: 2px; color: currentColor; opacity: .75; }
+
+  #rm .prog-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; color: #787774; margin-bottom: 6px; }
+  #rm .prog-head b { color: #37352f; font-weight: 500; }
+  #rm .pbar { height: 6px; background: #f1f1ef; border-radius: 999px; overflow: hidden; }
+  #rm .pfill { height: 100%; width: 0%; background: #2383e2; border-radius: 999px; transition: width .25s ease; }
+
+  #rm .month { border-top: 1px solid #e9e9e7; }
+  #rm .mhead {
+    display: flex; align-items: center; gap: 8px; padding: 11px 4px; cursor: pointer;
+    border-radius: 5px; user-select: none;
+  }
+  #rm .mhead:hover { background: #f7f6f3; }
+  #rm .arw { flex: 0 0 auto; width: 0; height: 0; border-left: 5px solid #91918e; border-top: 4.5px solid transparent; border-bottom: 4.5px solid transparent; transition: transform .14s ease; }
+  #rm .arw.open { transform: rotate(90deg); }
+  #rm .mnum { color: #91918e; font-size: 13px; font-weight: 500; flex: 0 0 auto; }
+  #rm .mtitle { font-weight: 500; font-size: 14.5px; flex: 1 1 auto; }
+  #rm .mtitle.done { color: #91918e; text-decoration: line-through; }
+  #rm .badge {
+    flex: 0 0 auto; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 4px;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  #rm .badge.locked { background: #f1f1ef; color: #787774; }
+  #rm .badge.open { background: #dbeddb; color: #234a23; }
+  #rm .badge.cur { background: #d3e5ef; color: #1c3d52; }
+
+  #rm .mbody { display: none; padding: 2px 4px 16px 26px; }
+  #rm .mbody.open { display: block; }
+  #rm .q { font-size: 13px; color: #787774; margin: 0 0 12px; }
+  #rm .q b { color: #37352f; font-weight: 500; }
+  #rm .row { display: flex; gap: 9px; padding: 3px 0; align-items: flex-start; }
+  #rm .lbl { font-size: 11px; font-weight: 500; color: #91918e; width: 74px; flex: 0 0 auto; padding-top: 2px; text-transform: uppercase; letter-spacing: .04em; }
+  #rm .val { flex: 1 1 auto; font-size: 13.5px; }
+  #rm .chip { display: inline-block; font-size: 11px; font-weight: 500; background: #f1f1ef; color: #5f5e5b; padding: 1px 7px; border-radius: 4px; }
+  #rm .items { margin-top: 10px; }
+  #rm .item { display: flex; gap: 9px; padding: 3px 0; align-items: flex-start; cursor: pointer; }
+  #rm .chk {
+    flex: 0 0 auto; width: 15px; height: 15px; margin-top: 2px; border: 1.5px solid #b9b9b7;
+    border-radius: 3px; position: relative; transition: background .1s, border-color .1s;
+  }
+  #rm .item:hover .chk { border-color: #91918e; }
+  #rm .chk.on { background: #2383e2; border-color: #2383e2; }
+  #rm .chk.on::after { content: ''; position: absolute; left: 4px; top: 0.5px; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  #rm .itxt { font-size: 13.5px; }
+  #rm .itxt.on { color: #91918e; text-decoration: line-through; }
+  #rm .gate {
+    margin-top: 12px; background: #f7f6f3; border-radius: 6px; padding: 10px 12px;
+    display: flex; gap: 9px; align-items: flex-start; cursor: pointer;
+  }
+  #rm .gate.open { background: #dbeddb; }
+  #rm .gate .gtxt { font-size: 13px; }
+  #rm .gate .gtxt b { font-weight: 500; }
+  #rm .gate .chk { margin-top: 1px; }
+  #rm .gate.open .chk { background: #0f7b6c; border-color: #0f7b6c; }
+  #rm .gate.open .chk::after { content: ''; position: absolute; left: 4px; top: 0.5px; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+
+  #rm h2.sec { font-size: 16px; font-weight: 600; margin: 26px 0 10px; }
+  #rm .wk { display: grid; grid-template-columns: 92px 1fr; gap: 6px 12px; font-size: 13.5px; }
+  #rm .wk .d { color: #787774; font-weight: 500; }
+  #rm .foot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e9e9e7; margin-top: 22px; padding-top: 14px; }
+  #rm .foot .hint { font-size: 11.5px; color: #91918e; }
+  #rm .reset { font-size: 12px; color: #787774; background: #f7f6f3; border: 1px solid #e9e9e7; border-radius: 5px; padding: 5px 11px; cursor: pointer; font-family: inherit; }
+  #rm .reset:hover { background: #f1f1ef; color: #37352f; }
+</style>
+</head>
+<body>
+
+<div id="rm">
+  <div class="page">
+    <div class="doc-ico">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5f5e5b" stroke-width="1.7" stroke-linecap="round">
+        <rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>
+      </svg>
+    </div>
+    <h1 class="doc">Roadmap 6 luni — obiectiv, livrabile, metrică</h1>
+    <p class="doc-sub">Fiecare lună are un scop clar și un semn că ești pe drum. Fără mers orb.</p>
+
+    <div class="callout">
+      <span class="ci">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 1.5 14 5v6L8 14.5 2 11V5z"/><path d="M8 6v3M8 11h.01"/></svg>
+      </span>
+      <div><b style="font-weight:500">Regula de aur.</b> Fiecare lună răspunde la o singură întrebare. Nu treci la luna următoare până nu treci poarta lunii curente. Bifează pe măsură ce avansezi — lunile se deblochează singure.</div>
+    </div>
+
+    <div class="prog-head">
+      <span>Progres general</span>
+      <span><b id="pcount">0/24</b> livrabile · <span id="ppct">0%</span></span>
+    </div>
+    <div class="pbar"><div class="pfill" id="pfill"></div></div>
+
+    <div id="months"></div>
+
+    <h2 class="sec">Ritmul săptămânal</h2>
+    <div class="wk">
+      <div class="d">Luni</div><div>Te uiți la cifre — vizite, RPM, erori în loguri. Doar citești, nu schimbi nimic.</div>
+      <div class="d">Marți–Miercuri</div><div>Faci o singură reglare. Una. Nu cinci. Ca să știi ce a funcționat.</div>
+      <div class="d">Joi</div><div>Dacă ești în faza de clonare, scrii conținut pentru site-ul nou.</div>
+      <div class="d">Vineri</div><div>Verifici că proxys-urile nu s-au terminat și că botul încă rulează.</div>
+      <div class="d">Weekend</div><div>Îl lași în pace. Rulează singur. Nu te stresa cu el.</div>
+    </div>
+
+    <h2 class="sec">Puncte de decizie</h2>
+    <div class="callout danger">
+      <span class="ci">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 2 15 14H1z"/><path d="M8 6.5v3.5M8 12h.01"/></svg>
+      </span>
+      <div><b style="font-weight:500">Sfârșitul lunii 2.</b> Dacă botul e detectat constant (RPM jalnic, avertismente), nu scalezi. Repari. Greșeala clasică: oamenii scalează un bot stricat și pierd bani mai repede.</div>
+    </div>
+    <div class="callout warn">
+      <span class="ci">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 2 15 14H1z"/><path d="M8 6.5v3.5M8 12h.01"/></svg>
+      </span>
+      <div><b style="font-weight:500">Sfârșitul lunii 3.</b> Dacă ești net pozitiv → clonezi. Dacă nu → diagnozezi: e problema aprobării, a RPM-ului sau a costului? Nu scalezi peste o problemă nerezolvată.</div>
+    </div>
+    <div class="callout warn">
+      <span class="ci">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 2 15 14H1z"/><path d="M8 6.5v3.5M8 12h.01"/></svg>
+      </span>
+      <div><b style="font-weight:500">Sfârșitul lunii 4.</b> Dacă site-ul #2 nu merge la fel de bine ca #1 → procesul de clonare are un defect. Repari procesul înainte de a face 10 site-uri.</div>
+    </div>
+    <div class="callout">
+      <span class="ci">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><path d="M8 5v3.5M8 11h.01"/></svg>
+      </span>
+      <div><b style="font-weight:500">Dacă iei ban.</b> Nu ești mort. Treci pe altă rețea (Adsterra, PropellerAds, Media.net), mai tolerantă cu boții. Pierzi RPM, dar nu pierzi sistemul.</div>
+    </div>
+
+    <div class="callout ok">
+      <span class="ci">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2.5 8.5 6 12l7.5-7.5"/></svg>
+      </span>
+      <div><b style="font-weight:500">Adevărul, ca să nu ai surprize.</b> Primele 2 luni, obiectivul tău nu e profitul. E să nu pierzi mult și să înveți. Abia din luna 3 începe jocul de bani. Roadmap-ul e intenționat conservator: nu-ți promite luna 2 profit, ci luna 3 un semn clar dacă merge sau nu. Așa afli adevărul în 90 de zile, nu în 9 luni.</div>
+    </div>
+
+    <div class="foot">
+      <span class="hint">Starea se salvează automat în browser.</span>
+      <button class="reset" id="reset">Resetează progresul</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var KEY = 'rm6_notion_state_v1';
+
+  var MONTHS = [
+    { n: 1, title: 'Fundația', q: 'Pot pune site-ul și botul pe picioare?',
+      obj: 'site live + AdSense depus + bot v1 care rulează',
+      liv: ['domeniu', '8-10 articole', 'VPS', 'bot v1', 'proxys de test'],
+      metru: 'botul rulează, apar primele impresii', cost: '~$60',
+      gate: 'Botul rulează fără crash și AdSense e depus.' },
+    { n: 2, title: 'Validare', q: 'Trece botul nedetectat?',
+      obj: 'dovedești că botul trece nedetectat și măsori RPM real',
+      liv: ['ramp la 3-5k vizite/zi', 'loguri', 'reglaje de stealth'],
+      metru: 'zero avertismente de trafic invalid', cost: '~$80',
+      gate: 'Zero avertismente de trafic invalid. Dacă e detectat constant → repari, nu scalezi.' },
+    { n: 3, title: 'Optimizare', q: 'Ies pe net pozitiv?',
+      obj: 'intri pe net pozitiv',
+      liv: ['pagină sub 0.6 MB', 'nișă testată', 'mix de proxys reglat'],
+      metru: 'net pozitiv, pragul de $100 depășit', cost: '~$120',
+      gate: 'Net pozitiv. Dacă nu → diagnozezi: aprobare, RPM sau cost.' },
+    { n: 4, title: 'Replicare', q: 'Se replică?',
+      obj: 'clonezi site-ul #1 și dovedești că se replică',
+      liv: ['site #2 live și funcțional', 'site #2 pe același cont AdSense'],
+      metru: 'site #2 aduce venit, fără ban', cost: '~$150',
+      gate: 'Site #2 performează comparabil cu #1. Dacă nu → repari procesul de clonare.' },
+    { n: 5, title: 'Scalare', q: 'Se scalează fără să se strice?',
+      obj: '4-6 site-uri active, dispersie de risc',
+      liv: ['proces repetabil de clonare', 'automatizarea gestionării'],
+      metru: 'venit agregat, cost per vizită stabil', cost: '~$250',
+      gate: 'Cost per vizită stabil pe toate site-urile active.' },
+    { n: 6, title: 'Sistematizare', q: 'Rulează singur?',
+      obj: 'sistem care rulează cu intervenție minimă',
+      liv: ['dashboard', 'documentație', 'rutină de mentenanță'],
+      metru: 'run-rate stabil ~$500-800/lună net', cost: '~$350',
+      gate: 'Run-rate stabil ~$500-800/lună net, cu intervenție minimă.' }
+  ];
+
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { state = {}; }
+
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+  function id(m, i) { return 'm' + m + '-' + i; }
+  function gateId(m) { return 'g' + m; }
+
+  var TOTAL = 0;
+  MONTHS.forEach(function (m) { TOTAL += m.liv.length + 1; });
+
+  var esc = function (s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
+
+  var wrap = document.getElementById('months');
+  var html = '';
+  MONTHS.forEach(function (m, mi) {
+    var gid = gateId(m.n);
+    var gateOn = !!state[gid];
+    var prevDone = mi === 0 ? true : !!state[gateId(MONTHS[mi - 1].n)];
+    var allDone = m.liv.every(function (_, i) { return !!state[id(m.n, i)]; }) && gateOn;
+
+    var badge = allDone
+      ? '<span class="badge open">trecută</span>'
+      : (prevDone ? '<span class="badge cur">activă</span>' : '<span class="badge locked">blocată</span>');
+
+    html += '<div class="month">';
+    html += '<div class="mhead" data-toggle="m' + m.n + '">';
+    html += '<span class="arw" id="arw-m' + m.n + '"></span>';
+    html += '<span class="mnum">Luna ' + m.n + '</span>';
+    html += '<span class="mtitle' + (allDone ? ' done' : '') + '">' + esc(m.title) + '</span>';
+    html += badge + '</div>';
+
+    html += '<div class="mbody" id="body-m' + m.n + '">';
+    html += '<p class="q"><b>Întrebarea lunii:</b> ' + esc(m.q) + '</p>';
+    html += '<div class="row"><span class="lbl">Obiectiv</span><span class="val">' + esc(m.obj) + '</span></div>';
+    html += '<div class="row"><span class="lbl">Buget</span><span class="val"><span class="chip">' + esc(m.cost) + '</span></span></div>';
+    html += '<div class="row"><span class="lbl">Metru</span><span class="val">' + esc(m.metru) + '</span></div>';
+    html += '<div class="row" style="margin-top:8px"><span class="lbl">Livrabile</span><span class="val"></span></div>';
+    html += '<div class="items">';
+    m.liv.forEach(function (t, i) {
+      var k = id(m.n, i), on = !!state[k];
+      html += '<div class="item" data-check="' + k + '"><span class="chk' + (on ? ' on' : '') + '" id="c-' + k + '"></span><span class="itxt' + (on ? ' on' : '') + '" id="t-' + k + '">' + esc(t) + '</span></div>';
+    });
+    html += '</div>';
+    html += '<div class="gate' + (gateOn ? ' open' : '') + '" data-check="' + gid + '"><span class="chk' + (gateOn ? ' on' : '') + '" id="c-' + gid + '"></span><span class="gtxt" id="t-' + gid + '"><b>Poarta lunii ' + m.n + ':</b> ' + esc(m.gate) + '</span></div>';
+    html += '</div></div>';
+  });
+  wrap.innerHTML = html;
+
+  function refresh() {
+    var done = 0;
+    Object.keys(state).forEach(function (k) { if (state[k]) done++; });
+    var pct = Math.round(done / TOTAL * 100);
+    document.getElementById('pcount').textContent = done + '/' + TOTAL;
+    document.getElementById('ppct').textContent = pct + '%';
+    document.getElementById('pfill').style.width = pct + '%';
+  }
+  refresh();
+
+  wrap.addEventListener('click', function (e) {
+    var head = e.target.closest('[data-toggle]');
+    if (head) {
+      var idn = head.getAttribute('data-toggle');
+      var body = document.getElementById('body-' + idn);
+      var arw = document.getElementById('arw-' + idn);
+      var open = body.classList.toggle('open');
+      arw.classList.toggle('open', open);
+      return;
+    }
+    var ck = e.target.closest('[data-check]');
+    if (ck) {
+      var k = ck.getAttribute('data-check');
+      state[k] = !state[k];
+      save();
+      var on = state[k];
+      document.getElementById('c-' + k).classList.toggle('on', on);
+      var t = document.getElementById('t-' + k);
+      if (t) t.classList.toggle('on', on);
+      if (ck.classList.contains('gate')) ck.classList.toggle('open', on);
+      MONTHS.forEach(function (m, mi) {
+        var gid = gateId(m.n);
+        var gateOn = !!state[gid];
+        var prevDone = mi === 0 ? true : !!state[gateId(MONTHS[mi - 1].n)];
+        var allDone = m.liv.every(function (_, i) { return !!state[id(m.n, i)]; }) && gateOn;
+        var headEl = document.querySelector('[data-toggle="m' + m.n + '"]');
+        var title = headEl.querySelector('.mtitle');
+        title.classList.toggle('done', allDone);
+        var b = headEl.querySelector('.badge');
+        b.className = 'badge ' + (allDone ? 'open' : (prevDone ? 'cur' : 'locked'));
+        b.textContent = allDone ? 'trecută' : (prevDone ? 'activă' : 'blocată');
+      });
+      refresh();
+    }
+  });
+
+  var firstOpen = 1;
+  for (var i = 0; i < MONTHS.length; i++) {
+    if (!state[gateId(MONTHS[i].n)]) { firstOpen = MONTHS[i].n; break; }
+  }
+  var fb = document.getElementById('body-m' + firstOpen);
+  if (fb) { fb.classList.add('open'); document.getElementById('arw-m' + firstOpen).classList.add('open'); }
+
+  document.getElementById('reset').addEventListener('click', function () {
+    state = {}; save();
+    location.reload();
+  });
+})();
+</script>
+
+</body>
+</html>
